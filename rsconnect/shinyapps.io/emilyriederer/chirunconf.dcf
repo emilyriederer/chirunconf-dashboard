@@ -1,0 +1,12 @@
+name: chirunconf
+title: chirunconf
+username:
+account: emilyriederer
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 757716
+bundleId: 1912439
+url: https://emilyriederer.shinyapps.io/chirunconf/
+when: 1551639570.57532
+asMultiple: FALSE
+asStatic: FALSE
