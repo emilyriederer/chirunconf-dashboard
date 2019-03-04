@@ -26,10 +26,11 @@ fluidPage(
                  strong("Here's everything we've tackled so far!"),
                  DTOutput('tbl_overall')
                  ),
-        tabPanel("broom",   uiOutput("board_broom")), 
-        tabPanel("drake",   uiOutput("board_drake")), 
-        tabPanel("NLP",     uiOutput("board_NLP")), 
-        tabPanel("gt",      uiOutput("board_gt"))
+        tabPanel("drake",     uiOutput("board_drake")), 
+        tabPanel("broom",     uiOutput("board_broom")), 
+        tabPanel("workflowr", uiOutput("board_workflowr")),
+        tabPanel("NLP",       uiOutput("board_NLP")), 
+        tabPanel("gt",        uiOutput("board_gt"))
         
       )
     )

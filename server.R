@@ -7,12 +7,14 @@ Sys.setenv("GITHUB_PAT" = "2f6242ea6590c98d67b2d9e134c756e588dcee11")
 Sys.setenv(TZ="America/Chicago")
 drake <- create_repo_ref('ropensci', 'drake')
 broom <- create_repo_ref('tidymodels', 'broom')
+workflowr <- create_repo_ref("jdblischak", "workflowr")
 
 function(input, output){
 
   v <- reactiveValues(
     data_drake = NULL,
     data_broom = NULL,
+    data_workflowr = NULL,
     data = NULL,
     last_updated = NULL,
     rate_limit = NULL
@@ -21,12 +23,15 @@ function(input, output){
   observeEvent(input$refresh, {
     
     # issues data
-    v$data_drake <- parse_issues(get_issues(drake, state = "all", labels = "Chicago R Unconference"))
-    v$data_broom <- parse_issues(get_issues(broom, state = "all", labels = "beginner-friendly"))
+    v$data_drake <-     parse_issues(get_issues(drake, state = "all", labels = "Chicago R Unconference"))
+    v$data_broom <-     parse_issues(get_issues(broom, state = "all", labels = "beginner-friendly"))
+    v$data_workflowr <- parse_issues(get_issues(workflowr, state = "all", labels = "Chicago R Unconference"))
     # hack. delete with projmgr 
     v$data_drake$repo_name <- "drake"
     v$data_broom$repo_name <- "broom"
-    v$data <- rbind(v$data_drake, v$data_broom)
+    v$data_workflowr $ repo_name <- "workflowr"
+    # combine datasets
+    v$data <- rbind(v$data_drake, v$data_broom, v$data_workflowr)
     
     # metadata for sidebar
     v$last_updated <- Sys.time()
@@ -49,6 +54,13 @@ function(input, output){
   output$board_broom <- renderUI({
     if (is.null(v$data_broom)) return()
     html <- report_taskboard(v$data_broom, in_progress_when = is_assigned(), hover = TRUE, include_link = TRUE)
+    class(html) <- "character"
+    HTML(html)
+  })
+  
+  output$board_workflowr <- renderUI({
+    if (is.null(v$data_workflowr)) return()
+    html <- report_taskboard(v$data_workflowr, in_progress_when = is_assigned(), hover = TRUE, include_link = TRUE)
     class(html) <- "character"
     HTML(html)
   })
