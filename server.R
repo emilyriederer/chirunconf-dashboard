@@ -1,4 +1,5 @@
 library(shiny)
+library(DT)
 library(projmgr)
 
 # register repositories
@@ -12,13 +13,22 @@ function(input, output){
   v <- reactiveValues(
     data_drake = NULL,
     data_broom = NULL,
+    data = NULL,
     last_updated = NULL,
     rate_limit = NULL
     )
 
   observeEvent(input$refresh, {
+    
+    # issues data
     v$data_drake <- parse_issues(get_issues(drake, state = "all", labels = "Chicago R Unconference"))
     v$data_broom <- parse_issues(get_issues(broom, state = "all", labels = "beginner-friendly"))
+    # hack. delete with projmgr 
+    v$data_drake$repo_name <- "drake"
+    v$data_broom$repo_name <- "broom"
+    v$data <- rbind(v$data_drake, v$data_broom)
+    
+    # metadata for sidebar
     v$last_updated <- Sys.time()
     v$rate_limit <- capture.output(check_rate_limit(drake))
   })
@@ -42,6 +52,23 @@ function(input, output){
     class(html) <- "character"
     HTML(html)
   })
+  
+  output$closed_overall <- renderPlot({
+    if (is.null(v$data)) return()
+    ggplot( v$data[v$data$state == "closed",] ) + 
+      geom_bar(aes(x = repo_name, fill = ..count..)) + 
+      coord_flip() +
+      theme( 
+        legend.position = "none",
+        axis.title = element_blank(),
+        panel.background = element_blank()) +
+      labs(title = "Issues Closed by Project")
+  })
+  
+  output$tbl_overall <- renderDT(
+    v$data[v$data$state == "closed", c("repo_name", "title", "closed_at")], 
+    options = list(lengthChange = FALSE)
+  )
 
   output$last_updated <- renderText({
     if (is.null(v$last_updated)) return()

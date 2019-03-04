@@ -1,5 +1,7 @@
 library(shiny)
 library(shinythemes)
+library(ggplot2)
+library(DT)
 
 fluidPage(
   
@@ -19,9 +21,10 @@ fluidPage(
     mainPanel(
       tabsetPanel(
         tabPanel("Overall", 
-                 textOutput("text_overall"),
-                 p(),
-                 p("We can add more text here or some sort of a 'leader board' of most opened/closed issues by participant/repo?")
+                 strong(textOutput("text_overall")),
+                 plotOutput("closed_overall"),
+                 strong("Here's everything we've tackled so far!"),
+                 DTOutput('tbl_overall')
                  ),
         tabPanel("broom",   uiOutput("board_broom")), 
         tabPanel("drake",   uiOutput("board_drake")), 

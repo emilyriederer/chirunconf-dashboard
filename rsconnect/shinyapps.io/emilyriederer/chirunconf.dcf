@@ -5,8 +5,8 @@ account: emilyriederer
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 757716
-bundleId: 1912439
+bundleId: 1912939
 url: https://emilyriederer.shinyapps.io/chirunconf/
-when: 1551639570.57532
+when: 1551663028.4719
 asMultiple: FALSE
 asStatic: FALSE
